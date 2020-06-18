@@ -4,7 +4,11 @@ include 'bd.php';
  if (isset($_POST['exit']) == true) {
      //Уничтожаем сессию
      session_destroy();
+     unset($_SESSION['password']);
+     unset($_SESSION['name']);
+     unset($_SESSION['id']);
+     unset($_SESSION['role']);
 
      //Делаем редирект
-     echo '<meta http-equiv="refresh" content="0; url=index.html">';
+     exit('<meta http-equiv="refresh" content="0; url=index.php">');
  }

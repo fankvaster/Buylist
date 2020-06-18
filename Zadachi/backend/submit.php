@@ -16,7 +16,7 @@ include 'funct.php';
 
      if (count($rows) == 0) {
          $err[] = 'Ключ активации не верен!';
-         echo '<meta http-equiv="refresh" content="5; url=index.html">';
+         echo '<meta http-equiv="refresh" content="2; url=index.php">';
      }
     
      //Проверяем наличие ошибок и выводим пользователю
@@ -46,6 +46,6 @@ include 'funct.php';
             
          /*Перенаправляем пользователя на
          нужную нам страницу*/
-         echo '<meta http-equiv="refresh" content="5; url=index.html">';
+         echo '<meta http-equiv="refresh" content="5; url=index.php">';
      }
  }

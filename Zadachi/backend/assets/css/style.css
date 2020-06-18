@@ -1,0 +1,15 @@
+.green {
+    font: 24px, sans-serif;
+    text-shadow: lightgreen 1px 1px 0, lightgreen -1px -1px 0, 
+                 lightgreen -1px 1px 0, lightgreen 1px -1px 0;            
+   }
+.blue {
+	font: 24px, sans-serif;
+    text-shadow: blue 1px 1px 0, blue -1px -1px 0, 
+                 blue -1px 1px 0, blue 1px -1px 0;
+}
+.users {
+	font: 24px, sans-serif;
+    text-shadow: blue 1px 1px 0, lightgreen -1px -1px 0, 
+                 lightgreen -1px 1px 0, blue 1px -1px 0;
+}

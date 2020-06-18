@@ -4,8 +4,6 @@
  */
 include 'bd.php';
 include 'funct.php';
-
-session_start();
     
  /*Если нажата кнопка на регистрацию,
  начинаем проверку*/
@@ -30,6 +28,7 @@ session_start();
      //Проверяем наличие ошибок и выводим пользователю
      if (count($err) > 0) {
          echo showErrorMessage($err);
+         echo '<meta http-equiv="refresh" content="2; url=reg.html">';
      } else {
          /*Продолжаем проверять введеные данные
          Проверяем на совпадение пароли*/
@@ -43,9 +42,9 @@ session_start();
          } else {
              /*Проверяем существует ли у нас
              такой пользователь в БД*/
-             $sql = 'SELECT `username` 
-                    FROM `user`
-                    WHERE `username` = :login';
+             $sql = 'SELECT username 
+                    FROM user
+                    WHERE username = :login';
              //Подготавливаем PDO выражение для SQL запроса
              $stmt = $db->prepare($sql);
              $stmt->bindValue(':login', $_POST['email'], PDO::PARAM_STR);
@@ -59,7 +58,7 @@ session_start();
              //Проверяем наличие ошибок и выводим пользователю
              if (count($err) > 0) {
                  echo showErrorMessage($err);
-                 echo '<meta http-equiv="refresh" content="5; url=reg.html">';
+                 echo '<meta http-equiv="refresh" content="2; url=reg.html">';
              } else {
                  //Получаем ХЕШ соли
                  $salt = salt();
@@ -71,15 +70,14 @@ session_start();
 
                 
                  /*Если все хорошо, пишем данные в базу*/
-                 $sql = 'INSERT INTO  `user` (`username`, `password`, `salt`, `active_hex`, `status`, `role`) 
+                 $sql = 'INSERT INTO  `user` (`username`, `password`, `salt`, `active_hex`, `status`) 
                  VALUES (
                                 
                                 :email,
                                 :pass,
                                 :salt,
                                 :active_hex,
-                                0,
-                                2
+                                0
                                 )';
 
                  //Подготавливаем PDO выражение для SQL запроса
@@ -89,6 +87,29 @@ session_start();
                  $stmt->bindValue(':salt', $salt, PDO::PARAM_STR);
                  $stmt->bindValue(':active_hex', $active_hex, PDO::PARAM_STR);
                  $stmt->execute();
+
+                 $sql = 'INSERT INTO `profile`(`name`, `surname`, `middlename`, `status`) 
+                VALUES (
+                                "",
+                                "",
+                                "",
+                                0
+                                )';
+
+                 //Подготавливаем PDO выражение для SQL запроса
+                 $stmt = $db->prepare($sql);
+                 $stmt->execute();
+
+
+                 $sql = 'INSERT INTO `user_role`(role_id) 
+                 VALUES (
+                 2
+                 )';
+
+                 //Подготавливаем PDO выражение для SQL запроса
+                 $stmt = $db->prepare($sql);
+                 $stmt->execute();
+        
                 
                  //Отправляем письмо для активации
                  $url = 'key='. md5($salt);
@@ -102,7 +123,7 @@ session_start();
                  echo '<b>Вы успешно зарегистрировались! Пожалуйста активируйте свой аккаунт!</b>';
                  
                  //Сбрасываем параметры
-                 echo '<meta http-equiv="refresh" content="5; url=index.html">';
+                 echo '<meta http-equiv="refresh" content="2; url=index.php">';
                  exit;
              }
          }

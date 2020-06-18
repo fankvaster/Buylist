@@ -1,5 +1,7 @@
-<?php session_start();
+<?php
+session_start();
 include 'bd.php';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -7,7 +9,7 @@ include 'bd.php';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>User</title>
+    <title>Buylist</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
@@ -15,7 +17,7 @@ include 'bd.php';
     <link rel="stylesheet" href="assets/css/Header-Blue.css">
     <link rel="stylesheet" href="assets/css/Login-Form-Dark.css">
     <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/Table-With-Search-1.css">
     <link rel="stylesheet" href="assets/css/Table-With-Search.css">
 </head>
@@ -27,47 +29,65 @@ include 'bd.php';
                 <div class="container-fluid"><a class="navbar-brand text-dark" href="#">Buylist</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navcol-1">
                         <ul class="nav navbar-nav">
-                            <li class="nav-item" role="presentation"><a class="nav-link" href="#">О нас</a></li>
-                            <li class="nav-item dropdown"><a class="dropdown-toggle nav-link text-dark" data-toggle="dropdown" aria-expanded="false" role="button" aria-haspopup="true">Меню</a>
-                                <div class="dropdown-menu" role="menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" role="presentation" href="#">...</a>
-                                </div>
-                            </li>
-                        </ul>
                         <form class="form-inline mr-auto" target="_self">
                             <div class="form-group"><label for="search-field"></label></div>
                         </form>
-                        <span class="btn btn-primary text-dark action-button"><a href="userprofile.php">Профиль</a></span>
+                        <?if ($_SESSION['role'] == 2):?>
+                        <span class="btn btn-primary text-dark action-button"><a class="text-dark login green" href="user.php">На главную</a></span>
+                        <?else:?>
+                        <span class="btn btn-primary text-dark action-button"><a class="text-dark login green" href="admin.php">На главную</a></span>
+                        <?endif?>
                         <form action="exit.php" method="POST"><input class="btn btn-primary text-dark action-button" name="exit" type="submit" value="Выход">
                         </form>
+                        
                     </div>
                 </div>
             </nav>
 
             <div class="container hero">
                 <div class="row">
-                    <div class="col-12 col-lg-6 col-xl-5 offset-xl-1">
-                        <h1 class="text-dark">Создавайте списки как вам удобно.</h1>
-                        <p class="text-dark">Создавайте несколько списков, делайте напоминания, работайте со списками вместе с друзьями и много другое!</p><a class="btn btn-dark btn-lg text-dark action-button" role="button" href="untitled-2.html">Узнать больше</a>
-                    </div>
                     <div class="col-md-12 search-table-col">
                         <div class="form-group pull-right col-lg-4"><input type="text" class="search form-control" placeholder="Начните вводить название товара"></div><span class="counter pull-right"></span>
                         <div class="table-responsive table-bordered table table-hover table-bordered results">
                             <table class="table table-bordered table-hover">
                                 <thead class="bill-header cs">
-                                    <tr>
-                                        <th id="trs-hd" class="col-lg-1">id</th>
-                                        <th id="trs-hd" class="col-lg-2">Название</th>
-                                        <th id="trs-hd" class="col-lg-3">Производитель</th>
-                                        <th id="trs-hd" class="col-lg-2">Цена</th>
+                                    <tr align="center">
+                                        <th id="trs-hd">uid</th>
+                                        <th id="trs-hd">Название</th>
+                                        <th id="trs-hd">Категория</th>
+                                        <th id="trs-hd">Производитель</th>
+                                        <th id="trs-hd">Цена (в рублях)</th>
+                                        <th id="trs-hd">Действия</th>
                                     </tr>
+                                    <tr class="warning no-result">
+      <td id="tbltext" colspan="4"><i class="fa fa-warning"></i> Нет результатов</td>
+    </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Яблоко</td>
-                                        <td>Дядя Вася</td>
-                                        <td>20</td>
-                                    </tr>
+                                <tbody class="green">
+
+<?php
+
+
+$sql = 'SELECT * FROM list';
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo '<a class="green">Ваш список покупок: </a>'.'<br>';
+        foreach ($rows as $val) {
+            echo '<tr>'."\n";
+            echo '<td>'.$val['uid']."\n";
+            echo '<td>'.$val['product']."\n";
+            echo '<td>'.$val['category']."\n";
+            echo '<td>'.$val['price']."\n";
+            echo '<td>'.$val['manufacturer']."\n";
+            echo '<td><form action="dellist.php" method="post"><input name="'.$val['uid'].'" id="abut" class="btn green" 
+            value="Убрать из списка" type="submit"></td></form>'."\n";
+        }
+        ?>
+
+        </tr>
                                 </tbody>
                             </table>
                         </div>
