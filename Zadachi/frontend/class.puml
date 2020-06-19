@@ -1,0 +1,14 @@
+@startuml
+class Production {
+    +category
+    +manufacturer
+    +price
+    +product
+    +uid
+    +AddList()
+    +AddProduct()
+    +DelList()
+    +DelProduct()
+    +EditProduct()
+}
+@enduml
